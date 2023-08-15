@@ -6,7 +6,19 @@
     <title>Document</title>
     <link rel="stylesheet" href="sass/main.scss" />
     <script src="/socket.io/socket.io.js"></script>
-    <script defer src="server.js"></script>
+    <script defer src="js/script.js"></script>
   </head>
-  <body></body>
+  <body>
+    <main id="main">
+      <h1>Hejsan</h1>
+
+      <div id="login">
+        <form action="lobby.html" id="login__form">
+          <label for="username" class="login__label">Användarnamn</label>
+          <input type="text" name="username" id="login__input" required />
+          <button type="submit" id="login__btn">Börja chatta</button>
+        </form>
+      </div>
+    </main>
+  </body>
 </html>
