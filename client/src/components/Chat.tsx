@@ -1,3 +1,7 @@
-function Chat() {
-  return <></>;
+export function Chat() {
+  return (
+    <>
+      <p>hej</p>
+    </>
+  );
 }
