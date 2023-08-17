@@ -1,3 +1,8 @@
 function Login() {
-  return <></>;
+  return (
+    <>
+      <input type="text" />
+      <button>Börja chatta</button>
+    </>
+  );
 }

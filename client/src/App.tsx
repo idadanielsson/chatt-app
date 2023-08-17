@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import "./App.scss";
 import { IChatContext } from "./models/IChatContext";
 
-export const ChatContext = createContext<IChatContext>({});
+export const ChatContext = createContext<IChatContext>({ username: "", socket: });
 
 function App() {
   const [username, setUsername] = useState("");
@@ -22,8 +22,7 @@ function App() {
   };
   return (
     <>
-      <input type="text" />
-      <button>Börja chatta</button>
+      <ChatContext.Provider value={{ username }}></ChatContext.Provider>
     </>
   );
 }
