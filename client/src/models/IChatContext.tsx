@@ -6,13 +6,14 @@ import {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
+import { IMessage } from "./IMessage";
 
 export const ChatContext = createContext<IChatContext>({
   username: "",
   isLoggedIn: false,
   messages: [],
   connectedUsers: [],
-  newMessage: "",
+  inputValue: "",
   initChat: () => {},
   setUsernameFunction: () => {},
   printMessage: () => {},
@@ -27,7 +28,7 @@ export interface IChatContext {
   isLoggedIn: boolean;
   messages: string[];
   connectedUsers: string[];
-  newMessage: string;
+  inputValue: string;
   initChat(): void;
   setUsernameFunction(username: string): void;
   printMessage(data: string): void;
@@ -42,30 +43,38 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [messages, setMessages] = useState<string[]>([]);
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const setUsernameFunction = (username: string) => {
     setUsername(username);
   };
 
-  console.log(newMessage);
+  // console.log(newMessage);
   const setNewMessageFunction = (newMessage: string) => {
-    setNewMessage(newMessage);
+    setInputValue(newMessage);
   };
 
   const printMessage = (data: string) => {
-    // let copy = [...messages, data];
-    // setMessages(copy);
-    setMessages((messages) => [...messages, data]);
+    setMessages([...messages, data]);
   };
 
   const sendMessage = () => {
-    socket.emit("new_message", newMessage);
+    const messageForServer: IMessage = {
+      username,
+      message: inputValue,
+    };
 
-    socket.on("new-message-sent", (newMessage) => {
-      printMessage(newMessage);
-    });
+    socket.emit("new_message", messageForServer);
   };
+
+  socket.on("new-user-connected", (username) => {
+    printMessage(`${username} har anslutit till chatten`);
+    setConnectedUsers((prevUsers) => [...prevUsers, username]);
+  });
+
+  socket.on("new-message-sent", (messageFromServer: IMessage) => {
+    printMessage(`${messageFromServer.username}: ${messageFromServer.message}`);
+  });
 
   const initChat = () => {
     setIsLoggedIn(!isLoggedIn);
@@ -75,11 +84,10 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     socket.emit("user_connected", username);
     console.log(username);
 
-    socket.on("new-user-connected", (username) => {
-      printMessage(`${username} har anslutit till chatten`);
-      setConnectedUsers((prevUsers) => [...prevUsers, username]);
-    });
-    console.log(newMessage);
+    // socket.on("new-user-connected", (username) => {
+    //   printMessage(`${username} har anslutit till chatten`);
+    //   setConnectedUsers((prevUsers) => [...prevUsers, username]);
+    // });
 
     socket.on("disconnect", (disconnectedUsername) => {
       setConnectedUsers((prevUsers) =>
@@ -95,7 +103,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
         isLoggedIn,
         messages,
         connectedUsers,
-        newMessage,
+        inputValue,
         initChat,
         setUsernameFunction,
         printMessage,

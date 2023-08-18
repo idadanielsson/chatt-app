@@ -2,7 +2,7 @@ import { useChatContext } from "../models/IChatContext";
 
 // Chat component
 export function Chat() {
-  const { messages, newMessage, sendMessage, setNewMessageFunction } =
+  const { messages, inputValue, sendMessage, setNewMessageFunction } =
     useChatContext();
   const { connectedUsers } = useChatContext();
 
@@ -32,7 +32,7 @@ export function Chat() {
       >
         <input
           type="text"
-          value={newMessage}
+          value={inputValue}
           onChange={(e) => setNewMessageFunction(e.target.value)}
         />
         <button>Skicka</button>
