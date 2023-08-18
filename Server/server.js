@@ -18,8 +18,13 @@ io.on("connection", (socket) => {
   console.log("New user connected: ", socket.id);
 
   socket.on("user_connected", (username) => {
-    socket.emit("new-user-connected", username);
+    socket.broadcast.emit("new-user-connected", username);
     console.log(username);
+  });
+
+  socket.on("new_message", (newMessage) => {
+    console.log(newMessage);
+    io.emit("new-message-sent", newMessage);
   });
 
   socket.on("disconnect", () => {
