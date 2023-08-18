@@ -22,9 +22,8 @@ io.on("connection", (socket) => {
     console.log(username);
   });
 
-  socket.on("new_message", (newMessage) => {
-    console.log(newMessage);
-    io.emit("new-message-sent", newMessage);
+  socket.on("new_message", (messageFromClient) => {
+    io.emit("new-message-sent", messageFromClient);
   });
 
   socket.on("disconnect", () => {
