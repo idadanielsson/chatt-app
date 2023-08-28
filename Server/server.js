@@ -30,18 +30,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join_room", (room) => {
-    activeRooms.filter((a) => {
-      if (a === room) {
-        socket.join(room);
-        console.log(io.sockets.adapter.rooms);
-        io.emit("active_rooms", activeRooms);
-      } else {
-        socket.join(room);
-        activeRooms.push(room);
-        console.log(io.sockets.adapter.rooms);
-        io.emit("active_rooms", activeRooms);
-      }
-    });
+    const existingRoom = activeRooms.find((a) => a === room);
+
+    if (existingRoom) {
+      socket.join(room);
+      console.log(io.sockets.adapter.rooms);
+      io.emit("active_rooms", activeRooms);
+    } else {
+      socket.join(room);
+      activeRooms.push(room);
+      console.log(io.sockets.adapter.rooms);
+      io.emit("active_rooms", activeRooms);
+    }
   });
 
   socket.on("disconnect", () => {

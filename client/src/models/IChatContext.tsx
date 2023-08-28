@@ -1,6 +1,7 @@
 import {
   createContext,
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -17,7 +18,6 @@ export const ChatContext = createContext<IChatContext>({
   room: "",
   initChat: () => {},
   setUsernameFunction: () => {},
-  printMessage: () => {},
   setNewMessageFunction: () => {},
   sendMessage: () => {},
   setRoomFunction: () => {},
@@ -35,7 +35,6 @@ export interface IChatContext {
   room: string;
   initChat(): void;
   setUsernameFunction(username: string): void;
-  printMessage(data: string): void;
   setNewMessageFunction(newMessage: string): void;
   sendMessage(): void;
   setRoomFunction(room: string): void;
@@ -64,10 +63,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     setInputValue(newMessage);
   };
 
-  const printMessage = (data: string) => {
-    setMessages([...messages, data]);
-  };
-
   const sendMessage = () => {
     const messageForServer: IMessage = {
       username,
@@ -77,18 +72,32 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     socket.emit("new_message", messageForServer);
   };
 
-  socket.on("new-user-connected", (username) => {
-    printMessage(`${username} har anslutit till chatten`);
-    setConnectedUsers((prevUsers) => [...prevUsers, username]);
-  });
+  useEffect(() => {
+    const printMessage = (data: string) => {
+      setMessages((messages) => [...messages, data]);
+    };
 
-  socket.on("new-message-sent", (messageFromServer: IMessage) => {
-    printMessage(`${messageFromServer.username}: ${messageFromServer.message}`);
-  });
+    socket.on("new-user-connected", (username: string) => {
+      printMessage(`${username} har anslutit till chatten`);
+      setConnectedUsers((prevUsers) => [...prevUsers, username]);
+    });
 
-  socket.on("active_rooms", (activeRooms) => {
-    console.log(activeRooms);
-  });
+    socket.on("new-message-sent", (messageFromServer: IMessage) => {
+      printMessage(
+        `${messageFromServer.username}: ${messageFromServer.message}`
+      );
+    });
+
+    socket.on("active_rooms", (activeRooms) => {
+      console.log(activeRooms);
+    });
+
+    socket.on("disconnect", (disconnectedUsername) => {
+      setConnectedUsers((prevUsers) =>
+        prevUsers.filter((username) => username !== disconnectedUsername)
+      );
+    });
+  }, []);
 
   const joinRoomFunction = (room: string) => {
     if (room) {
@@ -108,12 +117,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     //   printMessage(`${username} har anslutit till chatten`);
     //   setConnectedUsers((prevUsers) => [...prevUsers, username]);
     // });
-
-    socket.on("disconnect", (disconnectedUsername) => {
-      setConnectedUsers((prevUsers) =>
-        prevUsers.filter((username) => username !== disconnectedUsername)
-      );
-    });
   };
 
   return (
@@ -127,7 +130,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
         inputValue,
         initChat,
         setUsernameFunction,
-        printMessage,
         setNewMessageFunction,
         sendMessage,
         setRoomFunction,
