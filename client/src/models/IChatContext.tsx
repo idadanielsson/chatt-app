@@ -12,6 +12,7 @@ import { IMessage } from "./IMessage";
 export const ChatContext = createContext<IChatContext>({
   username: "",
   isLoggedIn: false,
+  chatRooms: [],
   messages: [],
   connectedUsers: [],
   inputValue: "",
@@ -33,6 +34,7 @@ export interface IChatContext {
   connectedUsers: string[];
   inputValue: string;
   room: string;
+  chatRooms: string[];
   initChat(): void;
   setUsernameFunction(username: string): void;
   setNewMessageFunction(newMessage: string): void;
@@ -50,6 +52,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [room, setRoom] = useState("");
+  const [chatRooms, setChatRooms] = useState<string[]>([]);
 
   const setUsernameFunction = (username: string) => {
     setUsername(username);
@@ -88,8 +91,8 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
       );
     });
 
-    socket.on("active_rooms", (activeRooms) => {
-      console.log(activeRooms);
+    socket.on("active_rooms", (activeRooms: []) => {
+      setChatRooms(activeRooms);
     });
 
     socket.on("disconnect", (disconnectedUsername) => {
@@ -122,6 +125,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   return (
     <ChatContext.Provider
       value={{
+        chatRooms,
         room,
         username,
         isLoggedIn,

@@ -23,6 +23,7 @@ io.on("connection", (socket) => {
   socket.on("user_connected", (username) => {
     socket.broadcast.emit("new-user-connected", username);
     console.log(username);
+    io.emit("active_rooms", activeRooms);
   });
 
   socket.on("new_message", (messageFromClient) => {
@@ -35,7 +36,6 @@ io.on("connection", (socket) => {
     if (existingRoom) {
       socket.join(room);
       console.log(io.sockets.adapter.rooms);
-      io.emit("active_rooms", activeRooms);
     } else {
       socket.join(room);
       activeRooms.push(room);
