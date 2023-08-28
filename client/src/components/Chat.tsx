@@ -1,4 +1,6 @@
 import { useChatContext } from "../models/IChatContext";
+import "./Chat.scss";
+import { AiOutlineSend } from "react-icons/ai";
 
 // Chat component
 export function Chat() {
@@ -17,6 +19,22 @@ export function Chat() {
   return (
     <div className="chat">
       <div className="chat__rooms">
+        <div className="chat__createroom">
+          <form
+            action=""
+            onSubmit={(e) => {
+              e.preventDefault();
+              joinRoomFunction(room);
+            }}
+          >
+            <h2>Skapa rum:</h2>
+            <input
+              type="text"
+              onChange={(e) => setRoomFunction(e.target.value)}
+            />
+            <button>Skapa rum</button>
+          </form>
+        </div>
         {chatRooms.map((room, index) => (
           <button
             onClick={() => {
@@ -35,43 +53,32 @@ export function Chat() {
           <li key={index}>{user}</li>
         ))}
       </ul> */}
-        <h2>Chat Messages:</h2>
-        <ul>
-          {messages.map((message, index) => (
-            <li key={index}>{message}</li>
-          ))}
-        </ul>
+        <div className="messages">
+          <ul className="messages__list">
+            {messages.map((message, index) => (
+              <li key={index} className="messages__item">
+                {message}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <form
+          className="chatmessages"
           action=""
           onSubmit={(e) => {
             e.preventDefault();
             sendMessage();
           }}
         >
-          <h1>Skicka meddelande:</h1>
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setNewMessageFunction(e.target.value)}
           />
-          <button>Skicka</button>
-        </form>
-      </div>
-      <div className="chat__createroom">
-        <form
-          action=""
-          onSubmit={(e) => {
-            e.preventDefault();
-            joinRoomFunction(room);
-          }}
-        >
-          <h2>Skapa rum:</h2>
-          <input
-            type="text"
-            onChange={(e) => setRoomFunction(e.target.value)}
-          />
-          <button>Skapa rum</button>
+          <button>
+            <AiOutlineSend></AiOutlineSend>
+          </button>
         </form>
       </div>
     </div>
