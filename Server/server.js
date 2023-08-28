@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 const cors = require("cors");
+const { SocketAddress } = require("net");
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -13,6 +14,8 @@ const io = new Server(server, {
 });
 
 app.use(express.static("client"));
+
+let activeRooms = [];
 
 io.on("connection", (socket) => {
   console.log("New user connected: ", socket.id);
@@ -24,6 +27,21 @@ io.on("connection", (socket) => {
 
   socket.on("new_message", (messageFromClient) => {
     io.emit("new-message-sent", messageFromClient);
+  });
+
+  socket.on("join_room", (room) => {
+    activeRooms.filter((a) => {
+      if (a === room) {
+        socket.join(room);
+        console.log(io.sockets.adapter.rooms);
+        io.emit("active_rooms", activeRooms);
+      } else {
+        socket.join(room);
+        activeRooms.push(room);
+        console.log(io.sockets.adapter.rooms);
+        io.emit("active_rooms", activeRooms);
+      }
+    });
   });
 
   socket.on("disconnect", () => {

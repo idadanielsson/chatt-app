@@ -14,11 +14,14 @@ export const ChatContext = createContext<IChatContext>({
   messages: [],
   connectedUsers: [],
   inputValue: "",
+  room: "",
   initChat: () => {},
   setUsernameFunction: () => {},
   printMessage: () => {},
   setNewMessageFunction: () => {},
   sendMessage: () => {},
+  setRoomFunction: () => {},
+  joinRoomFunction: () => {},
 });
 
 export const useChatContext = () => useContext(ChatContext);
@@ -29,11 +32,14 @@ export interface IChatContext {
   messages: string[];
   connectedUsers: string[];
   inputValue: string;
+  room: string;
   initChat(): void;
   setUsernameFunction(username: string): void;
   printMessage(data: string): void;
   setNewMessageFunction(newMessage: string): void;
   sendMessage(): void;
+  setRoomFunction(room: string): void;
+  joinRoomFunction(room: string): void;
 }
 
 const socket = io("http://localhost:3000", { autoConnect: false });
@@ -44,12 +50,16 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   const [messages, setMessages] = useState<string[]>([]);
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [room, setRoom] = useState("");
 
   const setUsernameFunction = (username: string) => {
     setUsername(username);
   };
 
-  // console.log(newMessage);
+  const setRoomFunction = (room: string) => {
+    setRoom(room);
+  };
+
   const setNewMessageFunction = (newMessage: string) => {
     setInputValue(newMessage);
   };
@@ -76,13 +86,23 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     printMessage(`${messageFromServer.username}: ${messageFromServer.message}`);
   });
 
+  socket.on("active_rooms", (activeRooms) => {
+    console.log(activeRooms);
+  });
+
+  const joinRoomFunction = (room: string) => {
+    if (room) {
+      socket.emit("join_room", room);
+    }
+  };
+
   const initChat = () => {
     setIsLoggedIn(!isLoggedIn);
 
     socket.connect();
 
     socket.emit("user_connected", username);
-    console.log(username);
+    joinRoomFunction("lobby");
 
     // socket.on("new-user-connected", (username) => {
     //   printMessage(`${username} har anslutit till chatten`);
@@ -99,6 +119,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   return (
     <ChatContext.Provider
       value={{
+        room,
         username,
         isLoggedIn,
         messages,
@@ -109,6 +130,8 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
         printMessage,
         setNewMessageFunction,
         sendMessage,
+        setRoomFunction,
+        joinRoomFunction,
       }}
     >
       {children}
