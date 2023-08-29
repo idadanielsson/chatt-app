@@ -16,6 +16,7 @@ const io = new Server(server, {
 app.use(express.static("client"));
 
 let activeRooms = [];
+let connectedUsers = [];
 
 io.on("connection", (socket) => {
   console.log("New user connected: ", socket.id);
@@ -24,6 +25,8 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("new-user-connected", username);
     console.log(username);
     io.emit("active_rooms", activeRooms);
+    connectedUsers.push(username);
+    console.log(connectedUsers);
   });
 
   socket.on("new_message", (messageFromClient) => {
@@ -44,8 +47,9 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
+  socket.on("disconnect", (username) => {
+    console.log("A user disconnected", socket.id);
+    console.log(username);
   });
 });
 
