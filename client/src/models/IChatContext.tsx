@@ -95,8 +95,11 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
       setCurrentRoom(room);
     });
 
-    socket.on("active_rooms", (activeRooms: []) => {
-      setChatRooms(activeRooms);
+    socket.on("active_rooms", (jsonData) => {
+      const mapData = Object.entries(jsonData).map(([key, val]) => [key, val]);
+      console.log(mapData);
+
+      // setChatRooms(activeRooms);
     });
 
     socket.on("disconnect", (disconnectedUsername) => {
@@ -105,8 +108,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
       );
     });
   }, []);
-
-  console.log(currentRoom);
 
   const joinRoomFunction = (room: string) => {
     if (room) {

@@ -35,40 +35,67 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join_room", (room, roomToLeave) => {
-    const existingRoom = activeRooms.find((a) => a === room);
     socket.join(room);
-    let foundRoomToLeave = io.sockets.adapter.rooms.has(roomToLeave);
-
     socket.leave(roomToLeave);
 
-    if (!existingRoom) {
-      activeRooms.push(room);
-    }
+    // updateRooms();
 
-    console.log(foundRoomToLeave);
+    const mapData = new Map(io.sockets.adapter.rooms);
+    console.log("mapdata:", mapData);
 
-    if (!foundRoomToLeave) {
-      console.log("hej");
-      const index = activeRooms.findIndex((room) => room === roomToLeave);
+    const mapList = Array.from(mapData);
+    console.log(mapList);
 
-      if (index != -1) {
-        activeRooms.splice(index, 1);
-      }
-      console.log(index);
-    }
+    socket.emit("active_rooms", mapList);
 
-    // console.log(roomToLeave);
-    console.log(io.sockets.adapter.rooms);
-    io.emit("active_rooms", activeRooms);
-    io.emit("set_current_room", room);
-
-    console.log(activeRooms);
+    // console.log(io.sockets.adapter.rooms);
+    // io.emit("set_current_room", room);
   });
+
+  // socket.on("join_room", (room, roomToLeave) => {
+  //   socket.join(room);
+
+  //   socket.leave(roomToLeave);
+  //   const existingRoom = activeRooms.find((a) => a === room);
+
+  //   let foundRoomToLeave = io.sockets.adapter.rooms.has(roomToLeave);
+  //   console.log("foundRoomToLeave", foundRoomToLeave);
+
+  //   console.log(io.sockets.adapter.rooms);
+
+  //   if (!existingRoom) {
+  //     activeRooms.push(room);
+  //   }
+
+  //   // console.log(foundRoomToLeave);
+
+  //   if (!foundRoomToLeave) {
+  //     // console.log("hej");
+
+  //     activeRooms = activeRooms.filter((room) => room !== roomToLeave);
+
+  //     // const index = activeRooms.findIndex((room) => room === roomToLeave);
+
+  //     // if (index != -1) {
+  //     //   activeRooms.splice(index, 1);
+  //     // }
+  //     // console.log(index);
+  //   }
+
+  //   // console.log(roomToLeave);
+  //   // console.log(io.sockets.adapter.rooms);
+  //   io.emit("active_rooms", activeRooms);
+  //   io.emit("set_current_room", room);
+
+  //   console.log(activeRooms);
+  // });
 
   socket.on("disconnect", (username) => {
     console.log("A user disconnected", socket.id);
     console.log(username);
   });
 });
+
+updateRooms = () => {};
 
 server.listen(3000, () => console.log("Server is up an running"));
