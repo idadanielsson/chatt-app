@@ -1,11 +1,13 @@
 import { useChatContext } from "../models/IChatContext";
 import "./Login.scss";
+import { FcNext } from "react-icons/fc";
 
 export const Login = () => {
   const { setUsernameFunction, username, initChat } = useChatContext();
 
   return (
     <div className="logincontainer">
+      <h1>Chattforumet</h1>
       <div className="login">
         <input
           className="login__input"
@@ -20,7 +22,7 @@ export const Login = () => {
             initChat();
           }}
         >
-          Chatta
+          <FcNext></FcNext>
         </button>
       </div>
     </div>

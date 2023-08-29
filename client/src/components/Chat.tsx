@@ -75,6 +75,7 @@ export function Chat() {
             type="text"
             value={inputValue}
             onChange={(e) => setNewMessageFunction(e.target.value)}
+            placeholder="Meddelande"
           />
           <button>
             <AiOutlineSend></AiOutlineSend>
