@@ -26,6 +26,7 @@ io.on("connection", (socket) => {
     console.log(username);
     io.emit("active_rooms", activeRooms);
     connectedUsers.push(username);
+
     console.log(connectedUsers);
   });
 
@@ -33,18 +34,35 @@ io.on("connection", (socket) => {
     io.emit("new-message-sent", messageFromClient);
   });
 
-  socket.on("join_room", (room) => {
+  socket.on("join_room", (room, roomToLeave) => {
     const existingRoom = activeRooms.find((a) => a === room);
+    socket.join(room);
+    let foundRoomToLeave = io.sockets.adapter.rooms.has(roomToLeave);
 
-    if (existingRoom) {
-      socket.join(room);
-      console.log(io.sockets.adapter.rooms);
-    } else {
-      socket.join(room);
+    socket.leave(roomToLeave);
+
+    if (!existingRoom) {
       activeRooms.push(room);
-      console.log(io.sockets.adapter.rooms);
-      io.emit("active_rooms", activeRooms);
     }
+
+    console.log(foundRoomToLeave);
+
+    if (!foundRoomToLeave) {
+      console.log("hej");
+      const index = activeRooms.findIndex((room) => room === roomToLeave);
+
+      if (index != -1) {
+        activeRooms.splice(index, 1);
+      }
+      console.log(index);
+    }
+
+    // console.log(roomToLeave);
+    console.log(io.sockets.adapter.rooms);
+    io.emit("active_rooms", activeRooms);
+    io.emit("set_current_room", room);
+
+    console.log(activeRooms);
   });
 
   socket.on("disconnect", (username) => {

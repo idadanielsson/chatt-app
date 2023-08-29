@@ -52,6 +52,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [room, setRoom] = useState("");
+  const [currentRoom, setCurrentRoom] = useState("");
   const [chatRooms, setChatRooms] = useState<string[]>([]);
 
   const setUsernameFunction = (username: string) => {
@@ -90,6 +91,9 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
         `${messageFromServer.username}: ${messageFromServer.message}`
       );
     });
+    socket.on("set_current_room", (room: string) => {
+      setCurrentRoom(room);
+    });
 
     socket.on("active_rooms", (activeRooms: []) => {
       setChatRooms(activeRooms);
@@ -102,9 +106,11 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     });
   }, []);
 
+  console.log(currentRoom);
+
   const joinRoomFunction = (room: string) => {
     if (room) {
-      socket.emit("join_room", room);
+      socket.emit("join_room", room, currentRoom);
     }
   };
 
@@ -114,6 +120,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     socket.connect();
 
     socket.emit("user_connected", username);
+    setCurrentRoom("lobby");
     joinRoomFunction("lobby");
 
     // socket.on("new-user-connected", (username) => {
