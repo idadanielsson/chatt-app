@@ -15,8 +15,6 @@ const io = new Server(server, {
 
 app.use(express.static("client"));
 
-let activeRoom = "";
-
 io.on("connection", (socket) => {
   console.log("New user connected: ", socket.id);
 
@@ -25,13 +23,16 @@ io.on("connection", (socket) => {
     console.log(username);
   });
 
-  socket.on("new_message", (messageFromClient) => {
-    io.to(activeRoom).emit("new-message-sent", messageFromClient);
+  socket.on("new_message", (messageFromClient, room) => {
+    io.to(room).emit("new-message-sent", messageFromClient);
   });
 
   socket.on("join_room", (room, roomToLeave) => {
     socket.join(room);
-    socket.leave(roomToLeave);
+
+    if (room !== roomToLeave) {
+      socket.leave(roomToLeave);
+    }
 
     if (socket.rooms.has(socket.id)) {
       socket.leave(socket.id);
@@ -45,8 +46,6 @@ io.on("connection", (socket) => {
 
     io.emit("active_rooms", mapData);
     socket.emit("set_current_room", room);
-    activeRoom = room;
-    console.log(activeRoom);
   });
 
   socket.on("disconnect", (username) => {

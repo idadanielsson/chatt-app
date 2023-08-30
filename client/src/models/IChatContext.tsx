@@ -73,7 +73,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
       message: inputValue,
     };
 
-    socket.emit("new_message", messageForServer);
+    socket.emit("new_message", messageForServer, currentRoom);
   };
 
   useEffect(() => {
@@ -114,6 +114,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
   }, []);
 
   const joinRoomFunction = (room: string) => {
+    setMessages([]);
     if (room) {
       socket.emit("join_room", room, currentRoom);
     }

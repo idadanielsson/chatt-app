@@ -15,6 +15,7 @@ export const Login = () => {
           type="text"
           value={username}
           onChange={(e) => setUsernameFunction(e.target.value)}
+          required
         />
         <button
           className="login__btn"
