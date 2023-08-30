@@ -1,20 +1,22 @@
 .chat {
-  width: 50vw;
+  width: 70vw;
   height: 70vh;
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 25% 75%;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 
   &__rooms {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    border: 1px solid black;
-    background-color: rgb(34, 34, 34);
+    background-color: #f6f6f7;
+    border-right: 1px solid #e5e5e5;
   }
 
   &__chat {
-    background-color: rgb(34, 34, 34);
+    background-color: #fafafa;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,14 +25,40 @@
 
   &__createroom {
     // display: none;
+
+    button {
+      background-color: rgba(255, 255, 255, 0.835);
+    }
   }
+}
+
+.create-room {
+  display: flex;
 
   button {
-    padding: 5px 30px;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
     border: none;
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
       "Lucida Sans", Arial, sans-serif;
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 24px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    color: rgb(94, 94, 94);
+  }
+
+  input {
+    border: none;
+    background-color: white;
+    width: 100%;
+    height: 30px;
+    padding-left: 10px;
+    outline: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   }
 }
 
@@ -42,24 +70,34 @@
   padding: 10px;
   margin-bottom: 20px;
 
-  input {
-    width: 100%;
-    height: 100%;
-    outline: none;
-    font-size: 16px;
-    padding: 5px;
-    font-size: 14px;
-    border-radius: 5px;
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
+    height: 62px;
+    width: 62px;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 24px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    color: rgb(102, 47, 190);
   }
 
-  button {
-    font-size: 20px;
-    height: 100%;
-    outline: none;
-    background: none;
+  input {
     border: none;
-    color: white;
+    background-color: white;
+    width: 100%;
+    height: 60px;
+    padding-left: 10px;
+    outline: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    font-size: 16px;
   }
 }
 
@@ -85,8 +123,32 @@
 
   li {
     padding: 10px;
-    background-color: #3e3e3e;
     border-radius: 5px;
     margin: 5px 0;
+    background-color: rgb(102, 47, 190);
+    color: white;
+  }
+}
+
+h2 {
+  font-size: 16px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  color: #3e3e3e;
+}
+
+.room {
+  display: flex;
+  width: 75%;
+  padding: 20px;
+
+  &__btn {
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(102, 47, 190);
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    color: white;
   }
 }

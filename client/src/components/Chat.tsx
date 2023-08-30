@@ -1,6 +1,7 @@
 import { useChatContext } from "../models/IChatContext";
 import "./Chat.scss";
 import { AiOutlineSend } from "react-icons/ai";
+import { IoIosAddCircle } from "react-icons/io";
 
 // Chat component
 export function Chat() {
@@ -28,23 +29,30 @@ export function Chat() {
             }}
           >
             <h2>Skapa rum:</h2>
-            <input
-              type="text"
-              onChange={(e) => setRoomFunction(e.target.value)}
-            />
-            <button>Skapa rum</button>
+            <div className="create-room">
+              <input
+                type="text"
+                onChange={(e) => setRoomFunction(e.target.value)}
+              />
+              <button>
+                <IoIosAddCircle></IoIosAddCircle>
+              </button>
+            </div>
           </form>
         </div>
-        {chatRooms.map((room, index) => (
-          <button
-            onClick={() => {
-              joinRoomFunction(room);
-            }}
-            key={index}
-          >
-            {room}
-          </button>
-        ))}
+        <div className="room">
+          {chatRooms.map((room, index) => (
+            <button
+              onClick={() => {
+                joinRoomFunction(room);
+              }}
+              key={index}
+              className="room__btn"
+            >
+              {room}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="chat__chat">
         {/* <h2>Connected Users:</h2>

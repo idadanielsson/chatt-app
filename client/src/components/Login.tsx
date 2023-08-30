@@ -1,6 +1,6 @@
 import { useChatContext } from "../models/IChatContext";
 import "./Login.scss";
-import { FcNext } from "react-icons/fc";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 export const Login = () => {
   const { setUsernameFunction, username, initChat } = useChatContext();
@@ -22,7 +22,7 @@ export const Login = () => {
             initChat();
           }}
         >
-          <FcNext></FcNext>
+          <MdOutlineArrowForwardIos></MdOutlineArrowForwardIos>
         </button>
       </div>
     </div>

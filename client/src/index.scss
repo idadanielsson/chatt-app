@@ -1,15 +1,18 @@
 body {
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-    90deg,
-    rgba(53, 53, 53, 1) 0%,
-    rgba(69, 69, 69, 1) 35%,
-    rgba(43, 43, 43, 1) 100%
-  );
+
+  // background: linear-gradient(
+  //   90deg,
+  //   rgb(237, 188, 127) 0%,
+  //   rgb(239, 189, 127) 35%,
+  //   rgb(228, 168, 96) 100%
+  // );
 }
 
 code {
