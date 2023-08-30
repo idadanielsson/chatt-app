@@ -83,7 +83,18 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
 
     socket.on("new-user-connected", (username: string) => {
       printMessage(`${username} har anslutit till chatten`);
-      setConnectedUsers((prevUsers) => [...prevUsers, username]);
+    });
+
+    socket.on("active_rooms", (roomsList) => {
+      console.log(roomsList);
+
+      let list = [];
+
+      for (const [room] of Object.entries(roomsList)) {
+        list.push(room);
+      }
+
+      setChatRooms(list);
     });
 
     socket.on("new-message-sent", (messageFromServer: IMessage) => {
@@ -93,13 +104,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     });
     socket.on("set_current_room", (room: string) => {
       setCurrentRoom(room);
-    });
-
-    socket.on("active_rooms", (jsonData) => {
-      const mapData = Object.entries(jsonData).map(([key, val]) => [key, val]);
-      console.log(mapData);
-
-      // setChatRooms(activeRooms);
     });
 
     socket.on("disconnect", (disconnectedUsername) => {
@@ -123,11 +127,6 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     socket.emit("user_connected", username);
     setCurrentRoom("lobby");
     joinRoomFunction("lobby");
-
-    // socket.on("new-user-connected", (username) => {
-    //   printMessage(`${username} har anslutit till chatten`);
-    //   setConnectedUsers((prevUsers) => [...prevUsers, username]);
-    // });
   };
 
   return (
