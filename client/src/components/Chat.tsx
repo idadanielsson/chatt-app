@@ -19,8 +19,6 @@ export function Chat() {
     userTyping,
   } = useChatContext();
 
-  let typing = isTyping ? <p>{userTyping} skriver ett meddelande</p> : <p></p>;
-
   return (
     <div className="chat">
       <div className="chat__rooms">
@@ -68,6 +66,9 @@ export function Chat() {
             ))}
           </ul>
         </div>
+        <div className="typing">
+          {isTyping ? <p>{userTyping} skriver ett meddelande...</p> : <p></p>}
+        </div>
         <form
           className="chatmessages"
           action=""
@@ -77,7 +78,6 @@ export function Chat() {
             setInputValueFunction("");
           }}
         >
-          {typing}
           <input
             type="text"
             value={inputValue}
