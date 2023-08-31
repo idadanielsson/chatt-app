@@ -23,6 +23,10 @@ io.on("connection", (socket) => {
     console.log(username);
   });
 
+  socket.on("isTyping", ({ username, isTyping, room }) => {
+    socket.to(room).emit("user_typing", { username, isTyping });
+  });
+
   socket.on("new_message", (messageFromClient, room) => {
     io.to(room).emit("new-message-sent", messageFromClient);
   });
@@ -31,7 +35,10 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     if (room !== roomToLeave) {
-      socket.leave(roomToLeave);
+      if (roomToLeave === "lobby") {
+      } else {
+        socket.leave(roomToLeave);
+      }
     }
 
     if (socket.rooms.has(socket.id)) {
@@ -39,8 +46,8 @@ io.on("connection", (socket) => {
     }
 
     let mapData = Object.fromEntries(
-      Array.from(io.sockets.adapter.rooms, ([key, value]) => {
-        return [key, value];
+      Array.from(io.sockets.adapter.rooms, ([room, user]) => {
+        return [room, user];
       })
     );
 

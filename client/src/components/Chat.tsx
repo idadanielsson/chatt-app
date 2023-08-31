@@ -10,12 +10,16 @@ export function Chat() {
     inputValue,
     sendMessage,
     setNewMessageFunction,
+    setInputValueFunction,
     room,
     setRoomFunction,
     joinRoomFunction,
     chatRooms,
+    isTyping,
+    userTyping,
   } = useChatContext();
-  const { connectedUsers } = useChatContext();
+
+  let typing = isTyping ? <p>{userTyping} skriver ett meddelande</p> : <p></p>;
 
   return (
     <div className="chat">
@@ -55,12 +59,6 @@ export function Chat() {
         </div>
       </div>
       <div className="chat__chat">
-        {/* <h2>Connected Users:</h2>
-      <ul>
-        {connectedUsers.map((user, index) => (
-          <li key={index}>{user}</li>
-        ))}
-      </ul> */}
         <div className="messages">
           <ul className="messages__list">
             {messages.map((message, index) => (
@@ -70,15 +68,16 @@ export function Chat() {
             ))}
           </ul>
         </div>
-
         <form
           className="chatmessages"
           action=""
           onSubmit={(e) => {
             e.preventDefault();
             sendMessage();
+            setInputValueFunction("");
           }}
         >
+          {typing}
           <input
             type="text"
             value={inputValue}
