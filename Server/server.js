@@ -35,10 +35,7 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     if (room !== roomToLeave) {
-      if (roomToLeave === "lobby") {
-      } else {
-        socket.leave(roomToLeave);
-      }
+      socket.leave(roomToLeave);
     }
 
     if (socket.rooms.has(socket.id)) {
@@ -51,7 +48,13 @@ io.on("connection", (socket) => {
       })
     );
 
-    io.emit("active_rooms", mapData);
+    let roomsList = Object.keys(mapData);
+
+    if (!roomsList.includes("lobby")) {
+      roomsList.push("lobby");
+    }
+
+    io.emit("active_rooms", roomsList);
     socket.emit("set_current_room", room);
   });
 

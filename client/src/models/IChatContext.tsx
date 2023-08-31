@@ -110,7 +110,7 @@ function ChatProvider({ children }: PropsWithChildren<{}>) {
     });
 
     socket.on("active_rooms", (roomsList) => {
-      setChatRooms(Object.keys(roomsList));
+      setChatRooms(roomsList);
     });
 
     socket.on("new-message-sent", (messageFromServer: IMessage) => {
